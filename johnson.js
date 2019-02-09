@@ -5,16 +5,23 @@ module.exports = function findCircuits(edges) {
 
     var stack = [];
     var blocked = [];
-    var B = {};
+    var B = new Map();
     var Ak = [];
     var s;
 
     function unblock(u) {
         blocked[u] = false;
-        for (var i = 0, last=B[u].length; i < last; i++) {
-            var w = B[u][i];
-            B[u].splice(i, 1);
-            if (blocked[w]) { unblock(w); }
+        // for (var i = 0, last=B[u].length; i < last; i++) {
+        //     var w = B[u][i];
+        //     B[u] = B[u].splice(i, 1);
+        //     i = i-1;
+        //     if (blocked[w]) { unblock(w); }
+        // }
+        if (B.has(u)) {
+          B.get(u).forEach(function(w) {
+            B.get(u).delete(w);
+            if (blocked[w]) {unblock(w)}
+          })
         }
     }
 
@@ -41,9 +48,17 @@ module.exports = function findCircuits(edges) {
         } else {
           for (i = 0; i < Ak[v].length; i++) {
               w = Ak[v][i];
-              if (B[w].indexOf(v) === -1) {
-                B[w].push(v);
+              // if (B[w].indexOf(v) === -1) {
+              //   B[w].push(v);
+              // }
+              var entry = B.get(w);
+
+              if (!entry) {
+                entry = new Set();
+                B.set(w, entry);
               }
+
+              entry.add(w)
           }
         }
         stack.pop();
@@ -63,15 +78,6 @@ module.exports = function findCircuits(edges) {
           return i >= minId;
         });
       }
-      // var subgraph = listOfEdges.map(function(l, index) {
-      //   if (index < minId) return [];
-      //
-      //   return l.filter(function(i) {
-      //     return i >= minId;
-      //   }) || [];
-      // });
-      //
-      // return subgraph;
     }
 
     function adjacencyStructureSCC(from) {
@@ -111,7 +117,10 @@ module.exports = function findCircuits(edges) {
         });
       });
 
-      return [leastVertex, adjList];
+      return {
+        leastVertex,
+        adjList
+      };
     }
 
     s = 0;
@@ -122,9 +131,9 @@ module.exports = function findCircuits(edges) {
         var p = adjacencyStructureSCC(s);
 
         // Its least vertex
-        s = p[0];
+        s = p.leastVertex;
         // Its adjacency list
-        Ak = p[1];
+        Ak = p.adjList;
 
         if (Ak) {
           for (var i = 0; i < Ak.length; i++) {

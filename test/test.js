@@ -29,8 +29,6 @@ test("find elementarty circuits in a directed graph", function(t) {
     // V0 o             ^      o V3
     // |           V1|      |
     // +------>------o--->--+
-
-
     var g = [
       [1],
       [2, 3],
@@ -44,15 +42,16 @@ test("find elementarty circuits in a directed graph", function(t) {
     t.end();
   });
 
-  t.test('it scales with the number of nodes and edges', function(t) {
+  t.test('it handles large number of nodes and edges', function(t) {
     var N = 100;
-    var L = 4;
+    var L = 10;
     var g = []
     for (var i = 0; i < N; i++) {
       g[i] = [];
       for (var j = 0; j < L; j++) {
         var target = Math.floor(Math.random() * N);
-        if (g[i].indexOf(target) === -1) g[i].push(target);
+        if (i === target) continue; // no self-link
+        if (g[i].indexOf(target) === -1) g[i].push(target); // no duplicate links
       }
     }
 
