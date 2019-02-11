@@ -1,4 +1,4 @@
-const tarjan = require("strongly-connected-components");
+var tarjan = require("strongly-connected-components");
 
 module.exports = function findCircuits(edges) {
     var circuits = []; // Output
