@@ -1,6 +1,6 @@
 {
   "name": "elementary-circuits-directed-graph",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Finds all elementary circuits of a directed graph using Johnson's algorithm (1975)",
   "main": "johnson.js",
   "scripts": {
