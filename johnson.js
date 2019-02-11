@@ -1,4 +1,4 @@
-var tarjan = require("strongly-connected-components");
+var tarjan = require('strongly-connected-components');
 
 module.exports = function findCircuits(edges) {
     var circuits = []; // Output
@@ -17,11 +17,11 @@ module.exports = function findCircuits(edges) {
         //     i = i-1;
         //     if (blocked[w]) { unblock(w); }
         // }
-        if (B.has(u)) {
-          B.get(u).forEach(function(w) {
-            B.get(u).delete(w);
-            if (blocked[w]) {unblock(w)}
-          })
+        if(B.has(u)) {
+            B.get(u).forEach(function(w) {
+                B.get(u).delete(w);
+                if(blocked[w]) {unblock(w);}
+            });
         }
     }
 
@@ -32,34 +32,36 @@ module.exports = function findCircuits(edges) {
         blocked[v] = true;
 
         // L1
-        for (var i = 0; i < Ak[v].length; i++) {
-            var w = Ak[v][i];
-            if (w === s) {
-              output(s, stack);
-              found = true;
-            } else if (!blocked[w]) {
-              found = circuit(w);
+        var i;
+        var w;
+        for(i = 0; i < Ak[v].length; i++) {
+            w = Ak[v][i];
+            if(w === s) {
+                output(s, stack);
+                found = true;
+            } else if(!blocked[w]) {
+                found = circuit(w);
             }
         }
 
         // L2
-        if (found) {
-          unblock(v);
+        if(found) {
+            unblock(v);
         } else {
-          for (i = 0; i < Ak[v].length; i++) {
-              w = Ak[v][i];
-              // if (B[w].indexOf(v) === -1) {
-              //   B[w].push(v);
-              // }
-              var entry = B.get(w);
+            for(i = 0; i < Ak[v].length; i++) {
+                w = Ak[v][i];
+                // if (B[w].indexOf(v) === -1) {
+                //   B[w].push(v);
+                // }
+                var entry = B.get(w);
 
-              if (!entry) {
-                entry = new Set();
-                B.set(w, entry);
-              }
+                if(!entry) {
+                    entry = new Set();
+                    B.set(w, entry);
+                }
 
-              entry.add(w)
-          }
+                entry.add(w);
+            }
         }
         stack.pop();
         return found;
@@ -72,60 +74,60 @@ module.exports = function findCircuits(edges) {
 
     function subgraph(minId) {
       // Remove edges with indice smaller than minId
-      for (var i = 0; i < edges.length; i++) {
-        if (i < minId) edges[i] = [];
-        edges[i] = edges[i].filter(function(i) {
-          return i >= minId;
-        });
-      }
+        for(var i = 0; i < edges.length; i++) {
+            if(i < minId) edges[i] = [];
+            edges[i] = edges[i].filter(function(i) {
+                return i >= minId;
+            });
+        }
     }
 
     function adjacencyStructureSCC(from) {
       // Make subgraph starting from vertex minId
-      subgraph(from);
-      var g = edges
+        subgraph(from);
+        var g = edges;
 
       // Find strongly connected components using Tarjan algorithm
-      var sccs = tarjan(g);
+        var sccs = tarjan(g);
 
       // Filter out trivial connected components (ie. made of one node)
-      var ccs = sccs.components.filter(function(scc) {
-          return scc.length > 1;
-      });
+        var ccs = sccs.components.filter(function(scc) {
+            return scc.length > 1;
+        });
 
       // Find least vertex
-      var leastVertex = Infinity;
-      var leastVertexComponent;
-      for (var i = 0; i < ccs.length; i++) {
-        for (var j = 0; j < ccs[i].length; j++) {
-          if (ccs[i][j] < leastVertex) {
-            leastVertex = ccs[i][j];
-            leastVertexComponent = i;
-          }
+        var leastVertex = Infinity;
+        var leastVertexComponent;
+        for(var i = 0; i < ccs.length; i++) {
+            for(var j = 0; j < ccs[i].length; j++) {
+                if(ccs[i][j] < leastVertex) {
+                    leastVertex = ccs[i][j];
+                    leastVertexComponent = i;
+                }
+            }
         }
-      }
 
-      var cc = ccs[leastVertexComponent];
+        var cc = ccs[leastVertexComponent];
 
-      if (!cc) return false;
+        if(!cc) return false;
 
       // Return the adjacency list of first component
-      var adjList = edges.map(function(l, index) {
-        if (cc.indexOf(index) === -1) return [];
-        return l.filter(function(i) {
-          return cc.indexOf(i) !== -1;
+        var adjList = edges.map(function(l, index) {
+            if(cc.indexOf(index) === -1) return [];
+            return l.filter(function(i) {
+                return cc.indexOf(i) !== -1;
+            });
         });
-      });
 
-      return {
-        leastVertex,
-        adjList
-      };
+        return {
+            leastVertex: leastVertex,
+            adjList: adjList
+        };
     }
 
     s = 0;
     var n = edges.length;
-    while (s < n) {
+    while(s < n) {
         // find strong component with least vertex in
         // subgraph starting from vertex `s`
         var p = adjacencyStructureSCC(s);
@@ -135,21 +137,21 @@ module.exports = function findCircuits(edges) {
         // Its adjacency list
         Ak = p.adjList;
 
-        if (Ak) {
-          for (var i = 0; i < Ak.length; i++) {
-            for (var j = 0; j < Ak[i].length; j++) {
-              var v_id = Ak[i][j];
-              blocked[+v_id] = false;
-              B[v_id] = [];
+        if(Ak) {
+            for(var i = 0; i < Ak.length; i++) {
+                for(var j = 0; j < Ak[i].length; j++) {
+                    var vertexId = Ak[i][j];
+                    blocked[+vertexId] = false;
+                    B[vertexId] = [];
+                }
             }
-          }
-          circuit(s);
-          s = s + 1;
+            circuit(s);
+            s = s + 1;
         } else {
-          s = n;
+            s = n;
         }
 
     }
 
     return circuits;
-}
+};
