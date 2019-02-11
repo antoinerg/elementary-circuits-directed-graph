@@ -4,8 +4,8 @@ var findCircuits = require("../johnson.js");
 
 var test = require('tape');
 
-test("find elementarty circuits in a directed graph", function(t) {
-  t.test('simple directed graph', function(t) {
+test("find elementarty circuits in", function(t) {
+  t.test('a simple directed graph', function(t) {
       var g = [
         [4], // 0
         [0,2], // 1
@@ -44,7 +44,7 @@ test("find elementarty circuits in a directed graph", function(t) {
 
   t.test('it handles large number of nodes and edges', function(t) {
     var N = 100;
-    var L = 10;
+    var L = 20;
     var g = []
     for (var i = 0; i < N; i++) {
       g[i] = [];
