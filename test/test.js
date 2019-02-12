@@ -3,6 +3,7 @@
 var findCircuits = require('../johnson.js');
 
 var test = require('tape');
+var fs = require('fs');
 
 test('find elementarty circuits in', function(t) {
     t.test('a simple directed graph', function(t) {
@@ -42,9 +43,17 @@ test('find elementarty circuits in', function(t) {
         t.end();
     });
 
-    t.test('it handles large number of nodes and edges', function(t) {
+    t.test('a mock', function(t) {
+        var mock = JSON.parse(fs.readFileSync('test/mock.json'));
+        var circuits = findCircuits(mock.adjList);
+
+        t.deepEqual(circuits, mock.circuits);
+        t.end();
+    })
+
+    t.test('a random graph with 100 nodes each with 20 random edges', function(t) {
         var N = 100;
-        var L = 20;
+        var L = 10;
         var g = [];
         for(var i = 0; i < N; i++) {
             g[i] = [];
@@ -56,10 +65,9 @@ test('find elementarty circuits in', function(t) {
         }
 
         var circuits = findCircuits(g);
-        console.log(circuits);
+        console.log('Found ' + circuits.length + ' elementary circuits!')
         t.end();
     });
-
 
     t.end();
 });
