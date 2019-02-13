@@ -6,10 +6,6 @@
   "parserOptions": {
     "ecmaVersion": 5,
   },
-  "globals": {
-    "Set": true,
-    "Map": true
-  },
   "env": {
     "commonjs": true
   },
