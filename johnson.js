@@ -5,21 +5,15 @@ module.exports = function findCircuits(edges) {
 
     var stack = [];
     var blocked = [];
-    var B = new Map();
+    var B = {};
     var Ak = [];
     var s;
 
     function unblock(u) {
         blocked[u] = false;
-        // for (var i = 0, last=B[u].length; i < last; i++) {
-        //     var w = B[u][i];
-        //     B[u] = B[u].splice(i, 1);
-        //     i = i-1;
-        //     if (blocked[w]) { unblock(w); }
-        // }
-        if(B.has(u)) {
-            B.get(u).forEach(function(w) {
-                B.get(u).delete(w);
+        if(B.hasOwnProperty(u)) {
+            Object.keys(B[u]).forEach(function(w) {
+                delete B[u][w];
                 if(blocked[w]) {unblock(w);}
             });
         }
@@ -50,17 +44,14 @@ module.exports = function findCircuits(edges) {
         } else {
             for(i = 0; i < Ak[v].length; i++) {
                 w = Ak[v][i];
-                // if (B[w].indexOf(v) === -1) {
-                //   B[w].push(v);
-                // }
-                var entry = B.get(w);
+                var entry = B[w];
 
                 if(!entry) {
-                    entry = new Set();
-                    B.set(w, entry);
+                    entry = {};
+                    B[w] = entry;
                 }
 
-                entry.add(w);
+                entry[w] = true;
             }
         }
         stack.pop();
@@ -142,7 +133,7 @@ module.exports = function findCircuits(edges) {
                 for(var j = 0; j < Ak[i].length; j++) {
                     var vertexId = Ak[i][j];
                     blocked[+vertexId] = false;
-                    B[vertexId] = [];
+                    B[vertexId] = {};
                 }
             }
             circuit(s);
