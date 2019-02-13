@@ -51,9 +51,9 @@ test('find elementarty circuits in', function(t) {
         t.end();
     });
 
-    t.test('a random graph with 100 nodes each with 20 random edges', function(t) {
-        var N = 100;
-        var L = 20;
+    t.test('a random graph with 500 nodes each with 5 random edges', function(t) {
+        var N = 500;
+        var L = 5;
         var g = [];
         for(var i = 0; i < N; i++) {
             g[i] = [];
