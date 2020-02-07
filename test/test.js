@@ -24,18 +24,18 @@ test('find elementarty circuits in', function(t) {
     });
 
     t.test('another simple directed graph', function(t) {
-    //   V4      V2
-    // +-<---o---<---o---<--+
-    // |             |      |
-    // V0 o             ^      o V3
-    // |           V1|      |
-    // +------>------o--->--+
+      //       V4      V2
+      // +-<---o---<---o---<--+
+      // |             |      |
+      // o V0          ^      o V3
+      // |           V1|      |
+      // +------>------o--->--+
         var g = [
-      [1],
-      [2, 3],
-      [4],
-      [2],
-      [0]
+          [1],
+          [2, 3],
+          [4],
+          [2],
+          [0]
         ];
 
         var circuits = findCircuits(g);

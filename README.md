@@ -10,10 +10,10 @@ An implementation of the Johnson's circuit finding algorithm [1].
 ```javascript
 var findCircuits = require("elementary-circuits-directed-graph");
 
-//   V4      V2
+//       V4      V2
 // +-<---o---<---o---<--+
 // |             |      |
-// V0 o             ^      o V3
+// o V0          ^      o V3
 // |           V1|      |
 // +------>------o--->--+
 
