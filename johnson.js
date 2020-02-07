@@ -1,6 +1,6 @@
 var tarjan = require('strongly-connected-components');
 
-module.exports = function findCircuits(edges) {
+module.exports = function findCircuits(edges, cb) {
     var circuits = []; // Output
 
     var stack = [];
@@ -60,7 +60,11 @@ module.exports = function findCircuits(edges) {
 
     function output(start, stack) {
         var cycle = [].concat(stack).concat(start);
-        circuits.push(cycle);
+        if(cb) {
+            cb(circuit);
+        } else {
+            circuits.push(cycle);
+        }
     }
 
     function subgraph(minId) {
@@ -74,19 +78,19 @@ module.exports = function findCircuits(edges) {
     }
 
     function adjacencyStructureSCC(from) {
-      // Make subgraph starting from vertex minId
+        // Make subgraph starting from vertex minId
         subgraph(from);
         var g = edges;
 
-      // Find strongly connected components using Tarjan algorithm
+        // Find strongly connected components using Tarjan algorithm
         var sccs = tarjan(g);
 
-      // Filter out trivial connected components (ie. made of one node)
+        // Filter out trivial connected components (ie. made of one node)
         var ccs = sccs.components.filter(function(scc) {
             return scc.length > 1;
         });
 
-      // Find least vertex
+        // Find least vertex
         var leastVertex = Infinity;
         var leastVertexComponent;
         for(var i = 0; i < ccs.length; i++) {
@@ -102,7 +106,7 @@ module.exports = function findCircuits(edges) {
 
         if(!cc) return false;
 
-      // Return the adjacency list of first component
+        // Return the adjacency list of first component
         var adjList = edges.map(function(l, index) {
             if(cc.indexOf(index) === -1) return [];
             return l.filter(function(i) {
@@ -144,5 +148,9 @@ module.exports = function findCircuits(edges) {
 
     }
 
-    return circuits;
+    if(cb) {
+        return;
+    } else {
+        return circuits;
+    }
 };

@@ -43,6 +43,24 @@ test('find elementarty circuits in', function(t) {
         t.end();
     });
 
+    t.test('another simple directed graph with callback', function(t) {
+        var g = [
+          [1],
+          [2, 3],
+          [4],
+          [2],
+          [0]
+        ];
+
+        var counter = 0;
+        function increment() {
+            counter += 1;
+        }
+        findCircuits(g, increment);
+        t.equal(counter, 2);
+        t.end();
+    });
+
     t.test('a mock', function(t) {
         var mock = JSON.parse(fs.readFileSync('test/mock.json'));
         var circuits = findCircuits(mock.adjList);
