@@ -30,18 +30,34 @@ console.log(findCircuits(adjacencyList))
 // returns [[0, 1, 2, 4, 0], [0, 1, 3, 2, 4, 0]]
 ```
 
+Optionally, one can define a callback to manage the result.
+```javascript
+// reusing the same adjacencyList as before
+var counter = 0;
+function increment() {
+    counter += 1;
+}
+findCircuits(adjacencyList, increment);
+console.log(counter)
+
+// return 2
+```
+This is especially useful if there are too many elementary circuits
+to store in memory. Using a callback, they can be saved to disk instead.
+
 ## Install
 
 npm install elementary-circuits-directed-graph
 
 ## API
 
-### `require("elementary-circuits-directed-graph")(adjacencyList)`
+### `require("elementary-circuits-directed-graph")(adjacencyList, callback)`
 Finds all the elementary circuits of a directed graph using
 
 * `adjacencyList` is an array of lists representing the directed edges of the graph
+* `callback` is an optional function that will be called each time an elementary circuit is found.
 
-**Returns** An array of arrays representing the elementary circuits
+**Returns** An array of arrays representing the elementary circuits if no callback was defined.
 
 ## Credits
 (c) 2018 Antoine Roy-Gobeil. MIT License.
