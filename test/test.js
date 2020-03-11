@@ -43,6 +43,25 @@ test('find elementarty circuits in', function(t) {
         t.end();
     });
 
+    t.test('another simple directed graph with orphaned nodes', function(t) {
+    //       V4      V2
+    // +-<---o---<---o
+    // |             |
+    // o V0          ^      o V3
+    // |           V1|
+    // +------>------o
+        var g = [];
+        g[0] = [1];
+        g[1] = [2];
+    // g[3] is unmapped
+        g[2] = [4];
+        g[4] = [0];
+
+        var circuits = findCircuits(g);
+        t.deepEqual(circuits, [[0, 1, 2, 4, 0]]);
+        t.end();
+    });
+
     t.test('another simple directed graph with callback', function(t) {
         var g = [
           [1],
