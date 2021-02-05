@@ -72,11 +72,14 @@ test('find elementarty circuits in', function(t) {
         ];
 
         var counter = 0;
-        function increment() {
+        var circuits = [];
+        function increment(cycle) {
+            circuits.push(cycle);
             counter += 1;
         }
         findCircuits(g, increment);
         t.equal(counter, 2);
+        t.deepEqual(circuits, [[0, 1, 2, 4, 0], [0, 1, 3, 2, 4, 0]]);
         t.end();
     });
 
