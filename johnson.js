@@ -70,7 +70,7 @@ module.exports = function findCircuits(edges, cb) {
     function subgraph(minId) {
       // Remove edges with indice smaller than minId
         for(var i = 0; i < edges.length; i++) {
-            if(i < minId) edges[i] = [];
+            if(i < minId || !edges[i]) edges[i] = [];
             edges[i] = edges[i].filter(function(i) {
                 return i >= minId;
             });
