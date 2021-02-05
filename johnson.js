@@ -61,7 +61,7 @@ module.exports = function findCircuits(edges, cb) {
     function output(start, stack) {
         var cycle = [].concat(stack).concat(start);
         if(cb) {
-            cb(circuit);
+            cb(cycle);
         } else {
             circuits.push(cycle);
         }
