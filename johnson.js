@@ -11,11 +11,12 @@ module.exports = function findCircuits(edges, cb) {
 
     function unblock(u) {
         blocked[u] = false;
-        if(B.hasOwnProperty(u)) {
-            Object.keys(B[u]).forEach(function(w) {
-                delete B[u][w];
-                if(blocked[w]) {unblock(w);}
-            });
+
+        for (const w of B[u]) {
+            B[u] = B[u].filter((i) => i !== w);
+            if (blocked[w]) {
+                unblock(w);
+            }
         }
     }
 
@@ -26,15 +27,14 @@ module.exports = function findCircuits(edges, cb) {
         blocked[v] = true;
 
         // L1
-        var i;
-        var w;
-        for(i = 0; i < Ak[v].length; i++) {
-            w = Ak[v][i];
+        for (const w of Ak[v]) {
             if(w === s) {
                 output(s, stack);
                 found = true;
             } else if(!blocked[w]) {
-                found = circuit(w);
+                if(circuit(w)) {
+                    found = true;
+                }
             }
         }
 
@@ -42,19 +42,15 @@ module.exports = function findCircuits(edges, cb) {
         if(found) {
             unblock(v);
         } else {
-            for(i = 0; i < Ak[v].length; i++) {
-                w = Ak[v][i];
-                var entry = B[w];
-
-                if(!entry) {
-                    entry = {};
-                    B[w] = entry;
+            for (const w of Ak[v]) {
+                if (!B[w].includes(v)) {
+                    B[w].push(v);
                 }
-
-                entry[w] = true;
             }
         }
+
         stack.pop();
+
         return found;
     }
 
@@ -68,7 +64,7 @@ module.exports = function findCircuits(edges, cb) {
     }
 
     function subgraph(minId) {
-      // Remove edges with indice smaller than minId
+        // Remove edges with indice smaller than minId
         for(var i = 0; i < edges.length; i++) {
             if(i < minId || !edges[i]) edges[i] = [];
             edges[i] = edges[i].filter(function(i) {
@@ -121,7 +117,7 @@ module.exports = function findCircuits(edges, cb) {
     }
 
     s = 0;
-    var n = edges.length;
+    var n = edges.length - 1;
     while(s < n) {
         // find strong component with least vertex in
         // subgraph starting from vertex `s`
@@ -136,8 +132,8 @@ module.exports = function findCircuits(edges, cb) {
             for(var i = 0; i < Ak.length; i++) {
                 for(var j = 0; j < Ak[i].length; j++) {
                     var vertexId = Ak[i][j];
-                    blocked[+vertexId] = false;
-                    B[vertexId] = {};
+                    blocked[vertexId] = false;
+                    B[vertexId] = [];
                 }
             }
             circuit(s);
